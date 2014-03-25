@@ -3,9 +3,12 @@
 #INSTALL SKYPE ON DESKTOP
 #
 class puppet-teamviewer-desktop ($source, $destination = "/root/teamviewer.deb") {
-    exec{ "dpkg --add-architecture i386;apt-get update;":
-        path => '/usr/bin:/bin:/usr/sbin:/sbin',
-        unless => '/usr/bin/dpkg --print-foreign-architectures | /bin/grep i386'
+    if defined (Exec["i386"]){
+        exec{ "i386":
+            command => "dpkg --add-architecture i386;apt-get update;",
+            path => '/usr/bin:/bin:/usr/sbin:/sbin',
+            unless => '/usr/bin/dpkg --print-foreign-architectures | /bin/grep i386'
+        }
     }
 
     wget::fetch { 'teamviewer.deb':
